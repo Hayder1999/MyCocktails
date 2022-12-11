@@ -1,0 +1,1 @@
+export const cocktailNameValidator = new RegExp(/^[a-zA-Z ]*$/);
