@@ -26,9 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Search = (props) => {
     const classes = useStyles();
-    const { value, showValidationError, onValueChangeHandler, onSearchHandler } = props;
+    const { value, validationError, noResultsFound, onValueChangeHandler, onSearchHandler } = props;
     const onKeyReleasedHandler = (event) => {
-        if(event.key === 'Enter') onSearchHandler();
+        if (event.key === 'Enter') onSearchHandler();
     };
     return (
         <Fragment>
@@ -36,7 +36,7 @@ const Search = (props) => {
                 <InputBase
                     id="search"
                     className={classes.input}
-                    placeholder="Search a cocktail"
+                    placeholder="Search a cocktail by name"
                     value={value}
                     onChange={event => onValueChangeHandler(event)}
                     onKeyUp={event => onKeyReleasedHandler(event)}
@@ -46,9 +46,14 @@ const Search = (props) => {
                 </IconButton>
             </Paper>
             {
-                showValidationError ? <FormHelperText className={classes.validationError} id="search">
+                validationError ? <FormHelperText className={classes.validationError} id="search">
                     Please use only letters and spaces in the search
-                </FormHelperText> : null 
+                </FormHelperText> : null
+            }
+            {
+                noResultsFound ? <FormHelperText id="search">
+                    No results were found
+                </FormHelperText> : null
             }
         </Fragment>
     );

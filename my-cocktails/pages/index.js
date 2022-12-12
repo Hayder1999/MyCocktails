@@ -3,9 +3,10 @@ import Head from 'next/head';
 import { endpoints } from '../src/utils/endpoints';
 import { useState } from 'react';
 import { cocktailNameValidator } from '../src/utils/validators';
-import { Search } from '../src/components/index';
+import { Search, Card } from '../src/components/index';
 import { makeStyles } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   searchSection: {
@@ -17,6 +18,14 @@ const useStyles = makeStyles((theme) => ({
       width: '40%'
     }
   },
+  cocktailsSection: {
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'center'
+    },
+    '& a': {
+      textDecoration: 'none'
+    }
+  },
 }));
 
 const Home = () => {
@@ -24,7 +33,8 @@ const Home = () => {
   const [cocktailName, setCocktailName] = useState('');
   const [cocktailNameIsValid, setCocktailIsValid] = useState(true);
   const [cocktails, setCocktails] = useState([]);
-  const [showNoResults, setShowNoResults] = useState(false);
+  const [noResultsFound, setNoResultsFound] = useState(false);
+
 
   const onCocktailNameChange = (event) => {
     setCocktailName(event.target.value);
@@ -40,17 +50,18 @@ const Home = () => {
     }
   };
 
-  const submitCocktailName = () => {
+  const onSubmitCocktailName = () => {
     if (cocktailNameIsValid) {
       axios.get(`${endpoints.searchCocktail}?s=${cocktailName}`)
         .then(result => {
-          if (result.data.drinks?.length === 0) {
-            setShowNoResults(true);
+          if (result.data.drinks === null) {
+            setCocktails([]);
+            setNoResultsFound(true);
           }
           else {
-            setShowNoResults(false);
+            setNoResultsFound(false);
+            setCocktails(result.data.drinks);
           }
-          setCocktails(result.data.drinks);
         })
         .catch((error) => console.log(error))
     }
@@ -65,11 +76,21 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <section className={ classes.searchSection }>
-          <Search value={cocktailName} showValidationError={!cocktailNameIsValid} onValueChangeHandler={onCocktailNameChange} onSearchHandler={submitCocktailName} />
-          {
-            showNoResults ? <Typography variant="body1">No results found</Typography> : null
-          }
+        <section className={classes.searchSection}>
+          <Search value={cocktailName} noResultsFound={noResultsFound} validationError={!cocktailNameIsValid} onValueChangeHandler={onCocktailNameChange} onSearchHandler={onSubmitCocktailName} />
+        </section>
+        <section>
+          <Grid container spacing={2} className={classes.cocktailsSection} alignItems="stretch">
+            {cocktails.map(cocktail => (
+              <Grid item xs={12} sm={4} md={3} lg={2} key={cocktail.idDrink} onClick={() => goToRecipe(cocktail.idDrink)}>
+                <Link href={`/${cocktail.idDrink}`} legacyBehavior={true} passHref={true}>
+                  <a>
+                    <Card title={cocktail.strDrink} subtitle={cocktail.strCategory} img={cocktail.strDrinkThumb} />
+                  </a>
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
         </section>
       </main>
     </div>
