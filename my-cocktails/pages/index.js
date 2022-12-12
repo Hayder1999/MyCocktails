@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Head from 'next/head';
 import { endpoints } from '../src/utils/endpoints';
-import { useState } from 'react';
 import { cocktailNameValidator } from '../src/utils/validators';
+import { useState, useEffect } from 'react';
 import { Search, Card } from '../src/components/index';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -67,6 +67,11 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    axios.get(endpoints.randomSingleCocktail)
+    .then(response => setCocktails(response.data.drinks))
+    .catch(error => console.log(error))
+  },[])
 
   return (
     <div>
