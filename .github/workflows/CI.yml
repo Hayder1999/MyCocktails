@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./meals-app
+        working-directory: ./my-cocktails
 
     strategy:
       matrix:
