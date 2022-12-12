@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   searchSection: {
-    marginBottom: theme.spacing(6),
+    marginBottom: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
@@ -35,7 +35,8 @@ const Home = () => {
   const [cocktails, setCocktails] = useState([]);
   const [noResultsFound, setNoResultsFound] = useState(false);
   const [searchError, setSearchError] = useState(false);
-  
+  const [randomCocktailError, setRandomCocktailError] = useState(false);
+
 
   const onCocktailNameChange = (event) => {
     setCocktailName(event.target.value);
@@ -71,9 +72,9 @@ const Home = () => {
 
   useEffect(() => {
     axios.get(endpoints.randomSingleCocktail)
-    .then(response => setCocktails(response.data.drinks))
-    .catch(error => console.log(error))
-  },[])
+      .then(response => setCocktails(response.data.drinks))
+      .catch(() => setRandomCocktailError(true))
+  }, [])
 
   return (
     <div>
@@ -86,7 +87,10 @@ const Home = () => {
         <section className={classes.searchSection}>
           <Search value={cocktailName} noResultsFound={noResultsFound} validationError={!cocktailNameIsValid} onValueChangeHandler={onCocktailNameChange} onSearchHandler={onSubmitCocktailName} />
           {
-            searchError ? <Notification type="error" message="Something went wrong while searching, try again later!"/> : null
+            searchError ? <Notification type="error" message="Something went wrong while searching, try again later!" /> : null
+          }
+          {
+            randomCocktailError ? <Notification type="error" message="Could not retrieve a random cocktail, try again later!" /> : null
           }
         </section>
         <section>

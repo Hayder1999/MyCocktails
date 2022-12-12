@@ -44,7 +44,6 @@ const useStyles = makeStyles(theme => ({
 const Navbar = () => {
     const classes = useStyles();
 
-
     return (
         <div className={classes.root}>
             <AppBar position="static" className={classes.appBar}>
