@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { endpoints } from '../src/utils/endpoints';
 import { cocktailNameValidator } from '../src/utils/validators';
 import { useState, useEffect } from 'react';
-import { Search, Card, Notification } from '../src/components/index';
+import { Search, Card, Notification, LoadingSpinner } from '../src/components/index';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
@@ -36,6 +36,7 @@ const Home = () => {
   const [noResultsFound, setNoResultsFound] = useState(false);
   const [searchError, setSearchError] = useState(false);
   const [randomCocktailError, setRandomCocktailError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   const onCocktailNameChange = (event) => {
@@ -53,6 +54,7 @@ const Home = () => {
   };
 
   const onSubmitCocktailName = () => {
+    setIsLoading(true);
     if (cocktailNameIsValid) {
       axios.get(`${endpoints.searchCocktail}?s=${cocktailName}`)
         .then(result => {
@@ -67,6 +69,7 @@ const Home = () => {
           setSearchError(false)
         })
         .catch(() => setSearchError(true))
+        .finally(() => setIsLoading(false))
     }
   };
 
@@ -74,6 +77,7 @@ const Home = () => {
     axios.get(endpoints.randomSingleCocktail)
       .then(response => setCocktails(response.data.drinks))
       .catch(() => setRandomCocktailError(true))
+      .finally(() => setIsLoading(false))
   }, [])
 
   return (
@@ -94,9 +98,10 @@ const Home = () => {
           }
         </section>
         <section>
+        { isLoading ? <LoadingSpinner /> : 
           <Grid container spacing={2} className={classes.cocktailsSection} alignItems="stretch">
             {cocktails.map(cocktail => (
-              <Grid item xs={12} sm={4} md={3} lg={2} key={cocktail.idDrink} onClick={() => goToRecipe(cocktail.idDrink)}>
+              <Grid item xs={12} sm={4} md={3} lg={2} key={cocktail.idDrink}>
                 <Link href={`/${cocktail.idDrink}`} legacyBehavior={true} passHref={true}>
                   <a>
                     <Card title={cocktail.strDrink} subtitle={cocktail.strCategory} img={cocktail.strDrinkThumb} />
@@ -105,6 +110,7 @@ const Home = () => {
               </Grid>
             ))}
           </Grid>
+          }
         </section>
       </main>
     </div>
