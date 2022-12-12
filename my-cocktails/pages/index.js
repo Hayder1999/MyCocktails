@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { endpoints } from '../src/utils/endpoints';
 import { cocktailNameValidator } from '../src/utils/validators';
 import { useState, useEffect } from 'react';
-import { Search, Card } from '../src/components/index';
+import { Search, Card, Notification } from '../src/components/index';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
@@ -34,7 +34,8 @@ const Home = () => {
   const [cocktailNameIsValid, setCocktailIsValid] = useState(true);
   const [cocktails, setCocktails] = useState([]);
   const [noResultsFound, setNoResultsFound] = useState(false);
-
+  const [searchError, setSearchError] = useState(false);
+  
 
   const onCocktailNameChange = (event) => {
     setCocktailName(event.target.value);
@@ -62,8 +63,9 @@ const Home = () => {
             setNoResultsFound(false);
             setCocktails(result.data.drinks);
           }
+          setSearchError(false)
         })
-        .catch((error) => console.log(error))
+        .catch(() => setSearchError(true))
     }
   };
 
@@ -83,6 +85,9 @@ const Home = () => {
       <main>
         <section className={classes.searchSection}>
           <Search value={cocktailName} noResultsFound={noResultsFound} validationError={!cocktailNameIsValid} onValueChangeHandler={onCocktailNameChange} onSearchHandler={onSubmitCocktailName} />
+          {
+            searchError ? <Notification type="error" message="Something went wrong while searching, try again later!"/> : null
+          }
         </section>
         <section>
           <Grid container spacing={2} className={classes.cocktailsSection} alignItems="stretch">

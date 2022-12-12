@@ -9,6 +9,7 @@ import { Fragment } from 'react';
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(1),
+        marginBottom: theme.spacing(3),
         display: 'flex',
         alignItems: 'center',
     },
