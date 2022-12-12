@@ -1,10 +1,9 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import LocalBarIcon from '@material-ui/icons/LocalBar';
-import Link from "next/link";
+import Link from 'next/link';
 
 const useStyles = makeStyles(theme => ({
     root: {
