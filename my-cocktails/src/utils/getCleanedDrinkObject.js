@@ -4,8 +4,7 @@ const getCleanedDrinkObject = (drink) => {
     const ingredientsWithMeasures = ingredients.map((ingredient, index) => (
         { name: ingredient, measure: drink[`strMeasure${index + 1}`] }
     ));
-    const cleanedInstructions = drink.strInstructions.split('\r\n').
-        filter(instruction => instruction !== '');
+    const cleanedInstructions = drink.strInstructions.split('\r\n');
     return {
         name: drink.strDrink,
         ingredients: ingredientsWithMeasures,

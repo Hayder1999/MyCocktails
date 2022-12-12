@@ -6,8 +6,8 @@ import Image from "next/image";
 import Grid from '@material-ui/core/Grid';
 import { useRouter } from "next/router";
 import { Button, LoadingSpinner } from '../src/components/index';
-import { useEffect, useState } from "react";
-import getCleanedDrinkObject from "../src/utils/getCleanedDrinkObject";
+import { useEffect, useState } from 'react';
+import getCleanedDrinkObject from '../src/utils/getCleanedDrinkObject';
 
 const useStyles = makeStyles((theme) => ({
     root: {
